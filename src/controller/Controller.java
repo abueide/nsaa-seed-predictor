@@ -1,4 +1,4 @@
-package fbseed.controller;
+package controller;
 
 public class Controller {
 }

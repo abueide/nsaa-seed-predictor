@@ -1,4 +1,4 @@
-package fbseed.controller;
+package controller;
 
 /**
  * Created by Andrew Bueide on 10/2/16.
