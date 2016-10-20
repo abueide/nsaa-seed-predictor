@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.List;
+
 /**
  * Created by Andrew Bueide on 10/12/16.
  */
@@ -17,9 +19,9 @@ public class Team {
         this.name = new SimpleStringProperty();
         this.record = new SimpleStringProperty();
         this.classSize = new SimpleStringProperty("unknown");
-        this.wins = new SimpleIntegerProperty();
-        this.losses = new SimpleIntegerProperty();
-        this.tier = new SimpleIntegerProperty();
+        this.wins = new SimpleIntegerProperty(0);
+        this.losses = new SimpleIntegerProperty(0);
+        this.tier = new SimpleIntegerProperty(0);
         this.points = new SimpleIntegerProperty();
         this.winPercentage = new SimpleDoubleProperty();
         setWins(0);
@@ -54,8 +56,7 @@ public class Team {
 
     public void setWins(int wins) {
         this.wins.set(wins);
-        updateRecord();
-        updateWinPercentage();
+        updateStats();
     }
 
     public int getLosses() {
@@ -68,8 +69,7 @@ public class Team {
 
     public void setLosses(int losses) {
         this.losses.set(losses);
-        updateRecord();
-        updateWinPercentage();
+        updateStats();
     }
 
     public double getWinPercentage() {
@@ -109,11 +109,11 @@ public class Team {
     }
 
     public void updateTier() {
-        if (getWinPercentage() > 0.77) {
+        if (getWinPercentage() > 77) {
             setTier(1);
-        } else if (getWinPercentage() > 0.55) {
+        } else if (getWinPercentage() > 55) {
             setTier(2);
-        } else if (getWinPercentage() > 0.33) {
+        } else if (getWinPercentage() > 33) {
             setTier(3);
         } else {
             setTier(4);
@@ -154,5 +154,17 @@ public class Team {
 
     public void setClassSize(String classSize) {
         this.classSize.set(classSize);
+    }
+
+    public static Team getTeamByName(String s, List<Team> teams) {
+        for (Team team : teams) {
+            if (team.getName().equalsIgnoreCase(s)) {
+                return team;
+            }
+        }
+        //System.out.println("Unfound Team: \"" + s + "\"");
+        Team team = new Team();
+        team.setName(s);
+        return team;
     }
 }

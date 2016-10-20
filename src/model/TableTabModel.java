@@ -17,11 +17,14 @@ import java.util.List;
 public class TableTabModel {
     ListProperty<FBGame> games;
     ListProperty<Team> teams;
+    ListProperty<FBGame> visibleGames;
+    ListProperty<Team> visibleTeams;
 
     public TableTabModel() {
         this.games = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.teams = new SimpleListProperty<>(FXCollections.observableArrayList());
-        updateStats();
+        this.visibleGames = this.games;
+        this.visibleTeams = this.teams;
     }
 
     public TableTabModel(List<FBGame> games, List<Team> teams) {
@@ -32,57 +35,48 @@ public class TableTabModel {
         });
         this.games = new SimpleListProperty<>(FXCollections.observableArrayList(games));
         this.teams = new SimpleListProperty<>(FXCollections.observableArrayList(teams));
-        updateStats();
-
+        this.visibleGames = this.games;
+        this.visibleTeams = this.teams;
     }
 
     public void updateStats() {
-        for (FBGame game : getGames()) {
-            for (Team team : getTeams()) {
+        for (Team team : getTeams()) {
+            team.setWins(0);
+            team.setLosses(0);
+            for (FBGame game : getGames()) {
+                String temp = "";
                 if ((game.getTeam1().equalsIgnoreCase(team.getName()) || game.getTeam2().equalsIgnoreCase(team.getName())) && !game.getWinner().equalsIgnoreCase("Unknown")) {
                     if (!game.getWinner().equalsIgnoreCase(game.getTeam1()) && !game.getWinner().equalsIgnoreCase(game.getTeam2())) {
 
                     } else if (game.getWinner().equalsIgnoreCase(team.getName())) {
                         team.setWins(team.getWins() + 1);
-                        /*if(getTeamByName(game.getLoser()).getTier() == 1){
-                            team.setPoints(team.getPoints() + 50);
-                        } else if(getTeamByName(game.getLoser()).getTier() == 2){
-                            team.setPoints(team.getPoints() + 47);
-                        }else if(getTeamByName(game.getLoser()).getTier() == 3){
-                            team.setPoints(team.getPoints() + 44);
-                        }else if(getTeamByName(game.getLoser()).getTier() == 4){
-                            team.setPoints(team.getPoints() + 41);
-                        }*/
                     } else {
                         team.setLosses(team.getLosses() + 1);
-                        /*if(getTeamByName(game.getWinner()).getTier() == 1){
-                            team.setPoints(team.getPoints() + 36);
-                        } else if(getTeamByName(game.getWinner()).getTier() == 2){
-                            team.setPoints(team.getPoints() + 33);
-                        }else if(getTeamByName(game.getWinner()).getTier() == 3){
-                            team.setPoints(team.getPoints() + 30);
-                        }else if(getTeamByName(game.getWinner()).getTier() == 4){
-                            team.setPoints(team.getPoints() + 37);
-                        }*/
                     }
                 }
-                team.updateStats();
             }
         }
-        /*for(FBGame game : getGames()){
-            for(Team team : getTeams()){
+        for(Team team : getTeams()){
+            for(FBGame game : getGames()){
+                String temp = "testing variable";
                 if (game.getWinner().equalsIgnoreCase(team.getName())){
+                    if(game.getWinner().equalsIgnoreCase(temp))
+                        System.out.print(game.getWinner() + "(Tier: " + team.getTier() + ")" + " won vs " + game.getLoser() + ", tier " + getTeamByName(game.getLoser()).getTier() + " points went from " + team.getPoints() + " to ");
                     if(getTeamByName(game.getLoser()).getTier() == 1){
-                        team.setPoints(team.getPoints() + 36);
+                        team.setPoints(team.getPoints() + 50);
                     } else if(getTeamByName(game.getLoser()).getTier() == 2){
-                        team.setPoints(team.getPoints() + 33);
+                        team.setPoints(team.getPoints() + 47);
                     }else if(getTeamByName(game.getLoser()).getTier() == 3){
-                        team.setPoints(team.getPoints() + 30);
+                        team.setPoints(team.getPoints() + 44);
                     }else if(getTeamByName(game.getLoser()).getTier() == 4){
-                        team.setPoints(team.getPoints() + 37);
+                        team.setPoints(team.getPoints() + 41);
                     }
+                    if(game.getWinner().equalsIgnoreCase(temp))
+                        System.out.println(team.getPoints());
                 }
                 if(game.getLoser().equalsIgnoreCase(team.getName())){
+                    if(game.getLoser().equalsIgnoreCase(temp))
+                        System.out.print(game.getLoser() + "(Tier: " + team.getTier() + ")"  + " lost vs " + game.getWinner() + ", tier " + getTeamByName(game.getWinner()).getTier() + " points went from " + team.getPoints() + " to ");
                     if(getTeamByName(game.getWinner()).getTier() == 1){
                         team.setPoints(team.getPoints() + 36);
                     } else if(getTeamByName(game.getWinner()).getTier() == 2){
@@ -90,11 +84,14 @@ public class TableTabModel {
                     }else if(getTeamByName(game.getWinner()).getTier() == 3){
                         team.setPoints(team.getPoints() + 30);
                     }else if(getTeamByName(game.getWinner()).getTier() == 4){
-                        team.setPoints(team.getPoints() + 37);
+                        team.setPoints(team.getPoints() + 27);
                     }
+                    if(game.getLoser().equalsIgnoreCase(temp))
+                        System.out.println(team.getPoints());
                 }
             }
-        }*/
+
+        }
     }
 
 
@@ -130,15 +127,52 @@ public class TableTabModel {
     }
 
     public Team getTeamByName(String s) {
-        System.out.println(s);
         for (Team team : getTeams()) {
             if (team.getName().equalsIgnoreCase(s)) {
+//                System.out.println(team.getName() + " : " + team.getTier());
                 return team;
             }
         }
-        System.out.println("Unfound Team: \"" + s + "\"");
-        Team test = new Team();
-        test.setName("Lincoln Pius X");
-        return test;
+        //System.out.println("Unfound Team: \"" + s + "\"");
+        Team team = new Team();
+        team.setName(s);
+        return team;
+    }
+
+    public ObservableList<FBGame> getVisibleGames() {
+        return visibleGames.get();
+    }
+
+    public ListProperty<FBGame> visibleGamesProperty() {
+        return visibleGames;
+    }
+
+    public void setVisibleGames(ObservableList<FBGame> visibleGames) {
+        this.visibleGames.set(visibleGames);
+    }
+
+    public ObservableList<Team> getVisibleTeams() {
+        return visibleTeams.get();
+    }
+
+    public ListProperty<Team> visibleTeamsProperty() {
+        return visibleTeams;
+    }
+
+    public void setVisibleTeams(ObservableList<Team> visibleTeams) {
+        this.visibleTeams.set(visibleTeams);
+    }
+
+    public void addVisibleTeam(Team team){
+        this.visibleTeams.add(team);
+    }
+
+    public void setClassVisible(String classSize){
+        setVisibleTeams(FXCollections.observableArrayList());
+        for(Team team : getTeams()){
+            if(team.getClassSize().equalsIgnoreCase(classSize)){
+                addVisibleTeam(team);
+            }
+        }
     }
 }

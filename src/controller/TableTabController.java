@@ -6,9 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import model.TableTabModel;
@@ -43,6 +41,10 @@ public class TableTabController implements Initializable {
     TableColumn winPercentCol;
     @FXML
     TableColumn pointsCol;
+    @FXML
+    ComboBox classCombo;
+    @FXML
+    TextField filter;
 
     FileTab tab;
     TableTabModel tableTabModel;
@@ -67,6 +69,7 @@ public class TableTabController implements Initializable {
         winnerCol.setCellValueFactory(
                 new PropertyValueFactory<FBGame, String>("winner")
         );
+
         recordCol.setCellValueFactory(
                 new PropertyValueFactory<Team, String>("record")
         );
@@ -76,6 +79,7 @@ public class TableTabController implements Initializable {
         pointsCol.setCellValueFactory(
                 new PropertyValueFactory<Team, Integer>("points")
         );
+
         winnerCol.setCellFactory(TextFieldTableCell.forTableColumn());
         winnerCol.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<FBGame, String>>() {
@@ -87,7 +91,6 @@ public class TableTabController implements Initializable {
                         tableTabModel.updateStats();
                     }
                 });
-
         DateFormat displayFormat = new SimpleDateFormat("MM/dd/yy");
 
         dateCol.setCellFactory(column -> {
@@ -106,6 +109,8 @@ public class TableTabController implements Initializable {
             };
         });
 
+
+//        CSVParser parser = new CSVParser(tab.getFiles().get(1));
         CSVParser parser = new CSVParser(tab.getFiles());
 
         tableTabModel.setGames(FXCollections.observableArrayList(parser.getGames()));
@@ -113,7 +118,23 @@ public class TableTabController implements Initializable {
         standingsTable.setItems(tableTabModel.getTeams());
         gamesTable.setItems(tableTabModel.getGames());
         gamesTable.setEditable(true);
+        gamesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+        for(TableColumn column : gamesTable.getColumns()){
+            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(3));
+        }
+        for(TableColumn column : standingsTable.getColumns()){
+            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(5));
+        }
+//        for(Team team : tableTabModel.getTeams()){
+//            System.out.println(team.getTier());
+//        }
+        //tableTabModel.setVisibleGames(parser.getTeam(tab.getFiles().get(1)));
+
+//        classCombo.setItems(FXCollections.observableArrayList("All", "A", "B", "C1", "C2", "D1", "D2", "D6"));
+//        classCombo.setOnAction(e -> {
+//            tableTabModel.setClassVisible(classCombo.getSelectionModel().getSelectedItem().toString());
+//        });
 
     }
 

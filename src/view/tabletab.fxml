@@ -1,24 +1,45 @@
-<?import javafx.scene.control.*?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox prefHeight="338.0" prefWidth="600.0"
-      xmlns="http://javafx.com/javafx/8.0.76-ea"
-      xmlns:fx="http://javafx.com/fxml/1">
+
+<VBox prefHeight="338.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+         <children>
+            <ComboBox fx:id="classCombo" prefHeight="26.0" prefWidth="78.0" />
+            <TextField fx:id="filter" prefHeight="26.0" prefWidth="530.0" promptText="Filter/Search" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
         <TableView fx:id="gamesTable" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="gameCol" prefWidth="116.0" text="Game"/>
-                <TableColumn fx:id="dateCol" prefWidth="125.0" text="Date"/>
-                <TableColumn fx:id="winnerCol" prefWidth="82.0" text="Winner"/>
+                <TableColumn fx:id="gameCol" prefWidth="116.0" text="Game" />
+                <TableColumn fx:id="dateCol" prefWidth="125.0" text="Date" />
+                <TableColumn fx:id="winnerCol" prefWidth="82.0" text="Winner" />
             </columns>
         </TableView>
         <TableView fx:id="standingsTable">
             <columns>
-                <TableColumn fx:id="seedCol" prefWidth="75.0" text="Seed"/>
-                <TableColumn fx:id="teamCol" prefWidth="64.0" text="Team"/>
-                <TableColumn fx:id="recordCol" prefWidth="86.0" text="Record"/>
-                <TableColumn fx:id="pointsCol" prefWidth="75.0" text="Points"/>
-                <TableColumn fx:id="winPercentCol" prefWidth="75.0" text="Win Percentage"/>
+                <TableColumn fx:id="seedCol" prefWidth="75.0" text="Seed" />
+                <TableColumn fx:id="teamCol" prefWidth="64.0" text="Team" />
+                <TableColumn fx:id="recordCol" prefWidth="86.0" text="Record" />
+                <TableColumn fx:id="pointsCol" prefWidth="75.0" text="Points" />
+                <TableColumn fx:id="winPercentCol" prefWidth="75.0" text="Win Percentage" />
             </columns>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
         </TableView>
     </children>
 </VBox>
