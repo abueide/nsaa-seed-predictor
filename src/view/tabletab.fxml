@@ -13,7 +13,7 @@
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
          <children>
             <ComboBox fx:id="classCombo" prefHeight="26.0" prefWidth="78.0" />
-            <TextField fx:id="filter" prefHeight="26.0" prefWidth="530.0" promptText="Filter/Search" />
+            <TextField fx:id="filter" prefHeight="26.0" prefWidth="530.0" promptText="Filter/Search" HBox.hgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

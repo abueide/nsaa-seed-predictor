@@ -86,9 +86,11 @@ public class Team {
 
     public void updateWinPercentage() {
         if (getWins() + getLosses() != 0) {
-            setWinPercentage(((double) getWins() / (getWins() + getLosses()) * 100));
+            double winPercentage = (double) getWins() / (getWins() + getLosses()) * 100;
+            setWinPercentage((double) (Math.round(winPercentage * 100)) / 100);
+//            setWinPercentage(((double) getWins() / (getWins() + getLosses()) * 100));
         } else {
-            setWinPercentage(0.0);
+            setWinPercentage(0);
         }
     }
 

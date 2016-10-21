@@ -90,33 +90,27 @@ public class CSVParser {
             }
         }
 
-/*        for (File file : files) {
+        for (File file : files) {
             try {
                 in = new FileReader(file);
                 Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
-                Team team = new Team();
-                team.setName("thisteamshouldnotappear");
                 for (CSVRecord record : records) {
-                    if (record.get(0).contains("(")) {
-                        if (!team.getName().equalsIgnoreCase("thisteamshouldnotappear")) {
-                            teams.add(team);
-                        }
-                        team = new Team();
-                        team.setName(record.get(0).split(" \\(")[0]);
-                    }
                     if (record.get(0).contains("/") && record.get(0).length() <= 10) {
-                        String opponent = record.get(1);
-                        if (opponent.contains("@")) {
-                            opponent = opponent.split("@ ")[1];
+                        for(Team team : teams) {
+                            String opponent = record.get(1);
+                            if (opponent.contains("@")) {
+                                opponent = opponent.split("@ ")[1];
+                            }
+                            if(opponent.equalsIgnoreCase(team.getName())) {
+                                team.setClassSize(record.get(2));
+                            }
                         }
-                        Team.getTeamByName(opponent, teams).setClassSize(record.get(2));
-                        System.out.println(Team.getTeamByName(opponent, teams).getClassSize());
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
         return teams;
     }

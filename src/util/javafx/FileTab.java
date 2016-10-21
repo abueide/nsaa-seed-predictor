@@ -22,7 +22,7 @@ public class FileTab extends Tab {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/tabletab.fxml"));
             TableTabController tableTabController = new TableTabController(this, new TableTabModel());
             loader.setController(tableTabController);
-            this.setContent(loader.load());
+                                  this.setContent(loader.load());
             this.setClosable(true);
         } catch (IOException exception) {
             exception.printStackTrace();

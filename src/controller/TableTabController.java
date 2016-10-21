@@ -3,6 +3,9 @@ package controller;
 import data.FBGame;
 import data.Team;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,6 +60,110 @@ public class TableTabController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        //        CSVParser parser = new CSVParser(tab.getFiles().get(1));
+        CSVParser parser = new CSVParser(tab.getFiles());
+
+
+        tableTabModel.setGames(FXCollections.observableArrayList(parser.getGames()));
+        tableTabModel.setTeams(FXCollections.observableArrayList(parser.getTeams()));
+
+        FilteredList<Team> filteredTeams = new FilteredList<>(tableTabModel.getTeams(), p -> true);
+        FilteredList<FBGame> filteredGames = new FilteredList<>(tableTabModel.getGames(), p -> true);
+
+
+        // 3. Wrap the FilteredList in a SortedList.
+        SortedList<Team> sortedTeams = new SortedList<>(filteredTeams);
+        SortedList<FBGame> sortedGames = new SortedList<FBGame>(filteredGames);
+
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        sortedTeams.comparatorProperty().bind(standingsTable.comparatorProperty());
+        sortedGames.comparatorProperty().bind(gamesTable.comparatorProperty());
+
+
+        standingsTable.setItems(sortedTeams);
+        gamesTable.setItems(sortedGames);
+        gamesTable.setEditable(true);
+        gamesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        for(TableColumn column : gamesTable.getColumns()){
+            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(3));
+        }
+        for(TableColumn column : standingsTable.getColumns()){
+            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(5));
+        }
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        filter.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredTeams.setPredicate(team -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (team.getName().toLowerCase().contains(lowerCaseFilter) && team.getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())) {
+                    return true; // Filter matches first name.
+                }
+                return false; // Does not match.
+            });
+            filteredGames.setPredicate(game -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (
+                        game.getTitle().toLowerCase().contains(lowerCaseFilter) && (
+                        tableTabModel.getTeamByName(game.getTeam1()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
+                        tableTabModel.getTeamByName(game.getTeam2()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())
+                )) {
+                    return true; // Filter matches first name.
+                }
+                return false; // Does not match.
+            });
+        });
+
+        classCombo.setOnAction(e -> {
+            String newValue = filter.getText();
+            filteredTeams.setPredicate(team -> {
+                boolean isCorrectClass = team.getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) || classCombo.getSelectionModel().getSelectedItem().toString().equalsIgnoreCase("All");
+//                 If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty() && isCorrectClass) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (team.getName().toLowerCase().contains(lowerCaseFilter) && isCorrectClass)   {
+                    return true; // Filter matches first name.
+                }
+                return false; // Does not match.
+            });
+            filteredGames.setPredicate(game -> {
+                boolean isCorrectClass = tableTabModel.getTeamByName(game.getTeam1()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
+                        tableTabModel.getTeamByName(game.getTeam2()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
+                        classCombo.getSelectionModel().getSelectedItem().toString().equalsIgnoreCase("All");
+                // If filter text is empty, display all persons.
+//                if (newValue == null || newValue.isEmpty()) {
+//                    return true;
+//                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (game.getTitle().toLowerCase().contains(lowerCaseFilter) && isCorrectClass) {
+                    return true; // Filter matches first name.
+                }
+                return false; // Does not match.
+            });
+        });
+
         teamCol.setCellValueFactory(
                 new PropertyValueFactory<Team, String>("name")
         );
@@ -110,28 +217,13 @@ public class TableTabController implements Initializable {
         });
 
 
-//        CSVParser parser = new CSVParser(tab.getFiles().get(1));
-        CSVParser parser = new CSVParser(tab.getFiles());
 
-        tableTabModel.setGames(FXCollections.observableArrayList(parser.getGames()));
-        tableTabModel.setTeams(FXCollections.observableArrayList(parser.getTeams()));
-        standingsTable.setItems(tableTabModel.getTeams());
-        gamesTable.setItems(tableTabModel.getGames());
-        gamesTable.setEditable(true);
-        gamesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-        for(TableColumn column : gamesTable.getColumns()){
-            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(3));
-        }
-        for(TableColumn column : standingsTable.getColumns()){
-            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(5));
-        }
 //        for(Team team : tableTabModel.getTeams()){
 //            System.out.println(team.getTier());
 //        }
         //tableTabModel.setVisibleGames(parser.getTeam(tab.getFiles().get(1)));
 
-//        classCombo.setItems(FXCollections.observableArrayList("All", "A", "B", "C1", "C2", "D1", "D2", "D6"));
+        classCombo.setItems(FXCollections.observableArrayList("All", "A", "B", "C1", "C2", "D1", "D2", "D6"));
 //        classCombo.setOnAction(e -> {
 //            tableTabModel.setClassVisible(classCombo.getSelectionModel().getSelectedItem().toString());
 //        });
