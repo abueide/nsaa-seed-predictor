@@ -13,6 +13,7 @@ public class Team {
     SimpleStringProperty name, record, classSize;
     SimpleIntegerProperty wins, losses, tier, points;
     SimpleDoubleProperty winPercentage;
+    boolean districtWinner = false;
 
 
     public Team() {
@@ -168,5 +169,13 @@ public class Team {
         Team team = new Team();
         team.setName(s);
         return team;
+    }
+
+    public boolean isDistrictWinner() {
+        return districtWinner;
+    }
+
+    public void setDistrictWinner(boolean districtWinner) {
+        this.districtWinner = districtWinner;
     }
 }

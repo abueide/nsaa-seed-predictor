@@ -32,6 +32,7 @@
         <TableView fx:id="standingsTable">
             <columns>
                 <TableColumn fx:id="seedCol" prefWidth="75.0" text="Seed" />
+                <TableColumn fx:id="districtWinner" prefWidth="75.0" text="District Winner" />
                 <TableColumn fx:id="teamCol" prefWidth="64.0" text="Team" />
                 <TableColumn fx:id="recordCol" prefWidth="86.0" text="Record" />
                 <TableColumn fx:id="pointsCol" prefWidth="75.0" text="Points" />

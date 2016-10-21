@@ -57,6 +57,7 @@ public class TableTabModel {
             }
         }
         for(Team team : getTeams()){
+            team.setPoints(0);
             for(FBGame game : getGames()){
                 String temp = "testing variable";
                 if (game.getWinner().equalsIgnoreCase(team.getName())){

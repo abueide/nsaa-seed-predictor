@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import model.TableTabModel;
@@ -44,6 +45,7 @@ public class TableTabController implements Initializable {
     TableColumn winPercentCol;
     @FXML
     TableColumn pointsCol;
+    @FXML TableColumn districtWinner;
     @FXML
     ComboBox classCombo;
     @FXML
@@ -51,6 +53,8 @@ public class TableTabController implements Initializable {
 
     FileTab tab;
     TableTabModel tableTabModel;
+
+
 
     public TableTabController(FileTab tab, TableTabModel tableTabModel) {
         this.tab = tab;
@@ -88,19 +92,21 @@ public class TableTabController implements Initializable {
         for(TableColumn column : gamesTable.getColumns()){
             column.prefWidthProperty().bind(gamesTable.widthProperty().divide(3));
         }
-        for(TableColumn column : standingsTable.getColumns()){
-            column.prefWidthProperty().bind(gamesTable.widthProperty().divide(5));
+        for(TableColumn column : standingsTable.getColumns()) {
+            String s = column.getText();
+//            if (s.equalsIgnoreCase("district winner") || s.equalsIgnoreCase("seed")) {
+//                column.prefWidthProperty().bind(standingsTable.widthProperty().divide(1 / 10));
+//            } else {
+                column.prefWidthProperty().bind(standingsTable.widthProperty().divide(6));
+//            }
         }
 
-        // 2. Set the filter Predicate whenever the filter changes.
         filter.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredTeams.setPredicate(team -> {
-                // If filter text is empty, display all persons.
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
-                // Compare first name and last name of every person with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (team.getName().toLowerCase().contains(lowerCaseFilter) && team.getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())) {
@@ -109,12 +115,10 @@ public class TableTabController implements Initializable {
                 return false; // Does not match.
             });
             filteredGames.setPredicate(game -> {
-                // If filter text is empty, display all persons.
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
-                // Compare first name and last name of every person with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (
@@ -122,9 +126,9 @@ public class TableTabController implements Initializable {
                         tableTabModel.getTeamByName(game.getTeam1()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
                         tableTabModel.getTeamByName(game.getTeam2()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())
                 )) {
-                    return true; // Filter matches first name.
+                    return true;
                 }
-                return false; // Does not match.
+                return false;
             });
         });
 
@@ -132,12 +136,10 @@ public class TableTabController implements Initializable {
             String newValue = filter.getText();
             filteredTeams.setPredicate(team -> {
                 boolean isCorrectClass = team.getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) || classCombo.getSelectionModel().getSelectedItem().toString().equalsIgnoreCase("All");
-//                 If filter text is empty, display all persons.
                 if (newValue == null || newValue.isEmpty() && isCorrectClass) {
                     return true;
                 }
 
-                // Compare first name and last name of every person with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (team.getName().toLowerCase().contains(lowerCaseFilter) && isCorrectClass)   {
@@ -149,20 +151,22 @@ public class TableTabController implements Initializable {
                 boolean isCorrectClass = tableTabModel.getTeamByName(game.getTeam1()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
                         tableTabModel.getTeamByName(game.getTeam2()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
                         classCombo.getSelectionModel().getSelectedItem().toString().equalsIgnoreCase("All");
-                // If filter text is empty, display all persons.
 //                if (newValue == null || newValue.isEmpty()) {
 //                    return true;
 //                }
 
-                // Compare first name and last name of every person with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (game.getTitle().toLowerCase().contains(lowerCaseFilter) && isCorrectClass) {
-                    return true; // Filter matches first name.
+                    return true;
                 }
-                return false; // Does not match.
+                return false;
             });
         });
+
+        districtWinner.setCellValueFactory(
+                new PropertyValueFactory<Team, CheckBoxListCell<Boolean>>("districtWinner")
+        );
 
         teamCol.setCellValueFactory(
                 new PropertyValueFactory<Team, String>("name")
