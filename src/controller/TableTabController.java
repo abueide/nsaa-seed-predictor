@@ -3,16 +3,17 @@ package controller;
 import data.FBGame;
 import data.Team;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
 import model.TableTabModel;
 import util.CSVParser;
 import util.javafx.FileTab;
@@ -45,7 +46,10 @@ public class TableTabController implements Initializable {
     TableColumn winPercentCol;
     @FXML
     TableColumn pointsCol;
-    @FXML TableColumn districtWinner;
+    @FXML
+    TableColumn districtWinner;
+    @FXML
+    TableColumn seedCol;
     @FXML
     ComboBox classCombo;
     @FXML
@@ -55,7 +59,6 @@ public class TableTabController implements Initializable {
     TableTabModel tableTabModel;
 
 
-
     public TableTabController(FileTab tab, TableTabModel tableTabModel) {
         this.tab = tab;
         this.tableTabModel = tableTabModel;
@@ -63,6 +66,8 @@ public class TableTabController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        classCombo.setItems(FXCollections.observableArrayList("All", "A", "B", "C1", "C2", "D1", "D2", "D6"));
+        classCombo.getSelectionModel().select("All");
 
         //        CSVParser parser = new CSVParser(tab.getFiles().get(1));
         CSVParser parser = new CSVParser(tab.getFiles());
@@ -85,47 +90,51 @@ public class TableTabController implements Initializable {
 
 
         standingsTable.setItems(sortedTeams);
+        standingsTable.setEditable(true);
         gamesTable.setItems(sortedGames);
         gamesTable.setEditable(true);
         gamesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        for(TableColumn column : gamesTable.getColumns()){
+        for (TableColumn column : gamesTable.getColumns()) {
             column.prefWidthProperty().bind(gamesTable.widthProperty().divide(3));
         }
-        for(TableColumn column : standingsTable.getColumns()) {
+        for (TableColumn column : standingsTable.getColumns()) {
             String s = column.getText();
 //            if (s.equalsIgnoreCase("district winner") || s.equalsIgnoreCase("seed")) {
 //                column.prefWidthProperty().bind(standingsTable.widthProperty().divide(1 / 10));
 //            } else {
-                column.prefWidthProperty().bind(standingsTable.widthProperty().divide(6));
+            column.prefWidthProperty().bind(standingsTable.widthProperty().divide(6));
 //            }
         }
 
         filter.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredTeams.setPredicate(team -> {
-                if (newValue == null || newValue.isEmpty()) {
+                boolean isInClass = team.getClassSize().toString().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) || classCombo.getSelectionModel().getSelectedItem().toString().equalsIgnoreCase("All");
+                if (newValue == null || newValue.isEmpty() && isInClass) {
                     return true;
                 }
 
                 String lowerCaseFilter = newValue.toLowerCase();
 
-                if (team.getName().toLowerCase().contains(lowerCaseFilter) && team.getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())) {
+                if (team.getName().toLowerCase().contains(lowerCaseFilter) && isInClass) {
                     return true; // Filter matches first name.
                 }
                 return false; // Does not match.
             });
             filteredGames.setPredicate(game -> {
-                if (newValue == null || newValue.isEmpty()) {
+                boolean containsClassSize =
+                        tableTabModel.getTeamByName(game.getTeam1()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
+                                tableTabModel.getTeamByName(game.getTeam2()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())
+                                || classCombo.getSelectionModel().getSelectedItem().toString().equalsIgnoreCase("All");
+                ;
+                if (newValue == null || newValue.isEmpty() && containsClassSize) {
                     return true;
                 }
 
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (
-                        game.getTitle().toLowerCase().contains(lowerCaseFilter) && (
-                        tableTabModel.getTeamByName(game.getTeam1()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString()) ||
-                        tableTabModel.getTeamByName(game.getTeam2()).getClassSize().equalsIgnoreCase(classCombo.getSelectionModel().getSelectedItem().toString())
-                )) {
+                        game.getTitle().toLowerCase().contains(lowerCaseFilter) && containsClassSize) {
                     return true;
                 }
                 return false;
@@ -142,7 +151,7 @@ public class TableTabController implements Initializable {
 
                 String lowerCaseFilter = newValue.toLowerCase();
 
-                if (team.getName().toLowerCase().contains(lowerCaseFilter) && isCorrectClass)   {
+                if (team.getName().toLowerCase().contains(lowerCaseFilter) && isCorrectClass) {
                     return true; // Filter matches first name.
                 }
                 return false; // Does not match.
@@ -165,9 +174,43 @@ public class TableTabController implements Initializable {
         });
 
         districtWinner.setCellValueFactory(
-                new PropertyValueFactory<Team, CheckBoxListCell<Boolean>>("districtWinner")
+                new PropertyValueFactory<Team, Boolean>("districtWinner")
         );
 
+        districtWinner.setCellFactory(new Callback<TableColumn<Team, Boolean>, TableCell<Team, Boolean>>() {
+            @Override
+            public TableCell<Team, Boolean> call(TableColumn<Team, Boolean> param) {
+                CheckBoxTableCell<Team, Boolean> checkBox = new CheckBoxTableCell<Team, Boolean>() {
+                    {
+                        setAlignment(Pos.CENTER);
+                    }
+
+                    @Override
+                    public void updateItem(Boolean item, boolean empty) {
+                        if (!empty) {
+                            TableRow row = getTableRow();
+
+                            if (row != null) {
+                                int rowNo = row.getIndex();
+                                TableView.TableViewSelectionModel sm = getTableView().getSelectionModel();
+
+                                if (item) sm.select(rowNo);
+                                else sm.clearSelection(rowNo);
+                            }
+                        }
+
+                        super.updateItem(item, empty);
+                    }
+                };
+                return checkBox;
+            }
+        });
+        districtWinner.setEditable(true);
+        districtWinner.setMaxWidth(100);
+        districtWinner.setMinWidth(100);
+//        districtWinner.setOnEditCommit(e -> {
+//            tableTabModel.updateSeeds(classCombo.getSelectionModel().getSelectedItem().toString());
+//        });
         teamCol.setCellValueFactory(
                 new PropertyValueFactory<Team, String>("name")
         );
@@ -190,6 +233,28 @@ public class TableTabController implements Initializable {
         pointsCol.setCellValueFactory(
                 new PropertyValueFactory<Team, Integer>("points")
         );
+        seedCol.setCellValueFactory(
+                new PropertyValueFactory<Team, Integer>("seed")
+        );
+        seedCol.setCellFactory(
+                column ->{
+                    return new TableCell<Team, Integer>() {
+                        @Override
+                        protected void updateItem(Integer item, boolean empty) {
+                            super.updateItem(item, empty);
+
+                            if (item == null || item == 0 || empty) {
+                                setText(null);
+                                setStyle("");
+                            } else {
+                                // Format date.
+                                setText(item.toString());
+                            }
+                        }
+                    };
+                }
+        );
+
 
         winnerCol.setCellFactory(TextFieldTableCell.forTableColumn());
         winnerCol.setOnEditCommit(
@@ -200,6 +265,7 @@ public class TableTabController implements Initializable {
                                 t.getTablePosition().getRow())
                         ).setWinner(t.getNewValue());
                         tableTabModel.updateStats();
+                        tableTabModel.updateSeeds(classCombo.getSelectionModel().getSelectedItem().toString());
                     }
                 });
         DateFormat displayFormat = new SimpleDateFormat("MM/dd/yy");
@@ -220,14 +286,17 @@ public class TableTabController implements Initializable {
             };
         });
 
-
+        for(Team team : tableTabModel.getTeams()){
+            team.districtWinnerProperty().addListener(e -> {
+               tableTabModel.updateSeeds(classCombo.getSelectionModel().getSelectedItem().toString());
+            });
+        }
 
 //        for(Team team : tableTabModel.getTeams()){
 //            System.out.println(team.getTier());
 //        }
         //tableTabModel.setVisibleGames(parser.getTeam(tab.getFiles().get(1)));
 
-        classCombo.setItems(FXCollections.observableArrayList("All", "A", "B", "C1", "C2", "D1", "D2", "D6"));
 //        classCombo.setOnAction(e -> {
 //            tableTabModel.setClassVisible(classCombo.getSelectionModel().getSelectedItem().toString());
 //        });

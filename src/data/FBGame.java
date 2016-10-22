@@ -52,48 +52,48 @@ public class FBGame {
         return team1.get();
     }
 
-    public SimpleStringProperty team1Property() {
-        return team1;
-    }
-
     public void setTeam1(String team1) {
         this.team1.set(team1);
+    }
+
+    public SimpleStringProperty team1Property() {
+        return team1;
     }
 
     public String getTeam2() {
         return team2.get();
     }
 
-    public SimpleStringProperty team2Property() {
-        return team2;
-    }
-
     public void setTeam2(String team2) {
         this.team2.set(team2);
+    }
+
+    public SimpleStringProperty team2Property() {
+        return team2;
     }
 
     public String getTitle() {
         return title.get();
     }
 
-    public SimpleStringProperty titleProperty() {
-        return title;
-    }
-
     public void setTitle(String title) {
         this.title.set(title);
+    }
+
+    public SimpleStringProperty titleProperty() {
+        return title;
     }
 
     public String getWinner() {
         return winner.get();
     }
 
-    public SimpleStringProperty winnerProperty() {
-        return winner;
-    }
-
     public void setWinner(String winner) {
         this.winner.set(winner);
+    }
+
+    public SimpleStringProperty winnerProperty() {
+        return winner;
     }
 
     public String getLoser() {
