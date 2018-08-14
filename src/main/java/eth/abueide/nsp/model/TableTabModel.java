@@ -1,7 +1,7 @@
-package model;
+package eth.abueide.nsp.model;
 
-import data.FBGame;
-import data.Team;
+import eth.abueide.nsp.data.FBGame;
+import eth.abueide.nsp.data.Team;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

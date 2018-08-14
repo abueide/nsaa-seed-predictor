@@ -1,4 +1,4 @@
-package data;
+package eth.abueide.nsp.data;
 
 import java.net.URL;
 

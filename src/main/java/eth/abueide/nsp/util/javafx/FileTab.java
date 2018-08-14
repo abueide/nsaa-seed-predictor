@@ -1,9 +1,9 @@
-package util.javafx;
+package eth.abueide.nsp.util.javafx;
 
-import controller.TableTabController;
+import eth.abueide.nsp.controller.TableTabController;
+import eth.abueide.nsp.model.TableTabModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
-import model.TableTabModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class FileTab extends Tab {
         super("New Tab");
         this.files = files;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/tabletab.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("tabletab.fxml"));
             TableTabController tableTabController = new TableTabController(this, new TableTabModel());
             loader.setController(tableTabController);
             this.setContent(loader.load());

@@ -1,7 +1,10 @@
-package controller;
+package eth.abueide.nsp.controller;
 
-import data.FBGame;
-import data.Team;
+import eth.abueide.nsp.data.FBGame;
+import eth.abueide.nsp.data.Team;
+import eth.abueide.nsp.model.TableTabModel;
+import eth.abueide.nsp.util.CSVParser;
+import eth.abueide.nsp.util.javafx.FileTab;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -14,9 +17,6 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
-import model.TableTabModel;
-import util.CSVParser;
-import util.javafx.FileTab;
 
 import java.net.URL;
 import java.text.DateFormat;

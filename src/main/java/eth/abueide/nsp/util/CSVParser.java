@@ -1,7 +1,7 @@
-package util;
+package eth.abueide.nsp.util;
 
-import data.FBGame;
-import data.Team;
+import eth.abueide.nsp.data.FBGame;
+import eth.abueide.nsp.data.Team;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -39,7 +39,7 @@ public class CSVParser {
                 String team1 = "unknown";
                 for (CSVRecord record : records) {
                     if (record.get(0).contains("(")) {
-                        team1 = record.get(0).split(" \\(")[0];
+                        team1 = record.get(0).split("\\(")[0];
                     }
 
                     if (record.get(0).contains("/") && record.get(0).length() <= 10) {

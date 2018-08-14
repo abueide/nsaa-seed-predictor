@@ -1,10 +1,10 @@
-package main;
+package eth.abueide.nsp;
 
-import controller.MainController;
+import eth.abueide.nsp.controller.MainController;
+import eth.abueide.nsp.util.Util;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
-import util.Util;
 
 import java.io.File;
 import java.io.IOException;

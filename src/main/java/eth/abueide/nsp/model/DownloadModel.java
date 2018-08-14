@@ -1,6 +1,6 @@
-package model;
+package eth.abueide.nsp.model;
 
-import data.FBClass;
+import eth.abueide.nsp.data.FBClass;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

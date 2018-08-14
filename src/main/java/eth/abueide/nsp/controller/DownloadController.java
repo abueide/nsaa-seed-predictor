@@ -1,6 +1,8 @@
-package controller;
+package eth.abueide.nsp.controller;
 
-import data.FBClass;
+import eth.abueide.nsp.data.FBClass;
+import eth.abueide.nsp.model.DownloadModel;
+import eth.abueide.nsp.util.Util;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,9 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-import model.DownloadModel;
 import org.apache.commons.io.FileUtils;
-import util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class DownloadController implements Initializable {
 
     public File display() {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("view/download.fxml"));
+                getClass().getClassLoader().getResource("download.fxml"));
         loader.setController(this);
         Parent root;
         try {

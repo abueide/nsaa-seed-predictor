@@ -1,5 +1,8 @@
-package controller;
+package eth.abueide.nsp.controller;
 
+import eth.abueide.nsp.model.MainModel;
+import eth.abueide.nsp.util.Util;
+import eth.abueide.nsp.util.javafx.FileTab;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,10 +12,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.MainModel;
 import org.apache.commons.io.FileUtils;
-import util.Util;
-import util.javafx.FileTab;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class MainController implements Initializable {
     public void launch(Stage primaryStage) {
         this.primaryStage = primaryStage;
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("view/main.fxml"));
+                getClass().getClassLoader().getResource("main.fxml"));
         loader.setController(this);
         Parent root;
         try {
@@ -66,13 +66,13 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbA.csv"));
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbB.csv"));
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbC1.csv"));
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbC2.csv"));
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbD1.csv"));
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbD2.csv"));
-            classSchedules.add(new URL("http://nsaahome.org/calculate/exports/showclassfbD6.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbA.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbB.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbC1.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbC2.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbD1.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbD2.csv"));
+            classSchedules.add(new URL("https://nsaahome.org/calculate/exports/showclassfbD6.csv"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

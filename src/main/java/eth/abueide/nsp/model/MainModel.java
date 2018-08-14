@@ -1,4 +1,4 @@
-package model;
+package eth.abueide.nsp.model;
 
 
 import javafx.beans.property.SimpleListProperty;

@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+group = "eth.abueide.nsp"
+version = "0.1-SNAPSHOT"
+mainClassName = "eth.abueide.nsp.Main"
+applicationDefaultJvmArgs = ["-Dgreeting.language=en"]
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  compile group: 'commons-io', name: 'commons-io', version: '2.5'
+  compile group: 'org.apache.commons', name: 'commons-csv', version: '1.4'
+  compile group: 'commons-validator', name: 'commons-validator', version: '1.5.1'
+  compile group: 'io.datafx', name: 'flow', version: '8.0.7'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version,
+                   'Main-Class': mainClassName
+    }
+}
