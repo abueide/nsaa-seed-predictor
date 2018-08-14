@@ -1,4 +1,6 @@
 ![Screenshot](pictures/screenshot.png?raw=true "Screenshot")
+(at the time of this screenshot the football season hasn't started yet, so the fields are unfilled)
+
 
 To use press on file in the top left and then click download. The program will freeze while it is downloading the csv files (multi threading is not implemented)
 To change the outcome of a game, find the game you want to change in the top table and double 
