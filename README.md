@@ -1,3 +1,4 @@
+# NSAA Seed Predictor
 ![Screenshot](pictures/screenshot.png?raw=true "Screenshot")
 (at the time of this screenshot the football season hasn't started yet, so the fields are unfilled)
 
