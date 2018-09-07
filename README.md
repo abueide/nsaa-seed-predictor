@@ -1,6 +1,5 @@
 # NSAA Seed Predictor
 ![Screenshot](pictures/screenshot.png?raw=true "Screenshot")
-(at the time of this screenshot the football season hasn't started yet, so the fields are unfilled)
 
 This program was written for the football coach at my local highschool in Scottsbluff, Nebraska. It is useful because it lets you try to predict what the seed placements for the finals will be so you know which team(s) you will need to prepare against.
 
